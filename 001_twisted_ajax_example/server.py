@@ -1,20 +1,22 @@
 from twisted.internet import reactor, endpoints
 from twisted.web.server import Site
 from twisted.web.resource import Resource
+from twisted.web.static import File
 import json
 
-class GetJSON(Resource):
-    def render_GET(self, request):
-        request.responseHeaders.addRawHeader(b"content-type", b"application/json")
-        data = {}
-        data['apple'] = 'green'
-        data['banana'] = 'yellow'
-        data['cherry'] = 'red'
-        request.write(json.dumps(data))
+json_data = {}
+json_data['apple'] = 'green'
+json_data['banana'] = 'yellow'
+json_data['cherry'] = 'red'
 
-root = Resource()
-root.putChild(b"get_json", GetJSON())
+class JsonHandler(Resource):
+
+    def render_GET(self, request):
+        return json.dumps(json_data)
+
+root = File('www')
+root.putChild(b"get_json", JsonHandler())
 factory = Site(root)
-endpoint = endpoints.TCP4ServerEndpoint(reactor, 8890)
+endpoint = endpoints.TCP4ServerEndpoint(reactor, 8888)
 endpoint.listen(factory)
 reactor.run()
