@@ -1,9 +1,11 @@
 
-$("h1#myid").click(function(){
-    $("div#div1").load("/get_json", function(responseTxt, statusTxt, xhr){
-      if(statusTxt == "success")
-        alert("External content loaded successfully!");
-      if(statusTxt == "error")
-        alert("Error: " + xhr.status + ": " + xhr.statusText);
-    });
-  });
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("myid").innerHTML = this.responseText
+    }
+  };
+  xhttp.open("GET", "/get_json", true);
+  xhttp.send();
+}
