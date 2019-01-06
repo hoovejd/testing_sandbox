@@ -6,6 +6,7 @@ function loadDoc() {
       document.getElementById("myid").innerHTML = this.responseText
     }
   };
-  xhttp.open("GET", "/get_json", true);
-  xhttp.send();
+  xhttp.open("POST", "/post_test", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("say=hello&to=racoon");
 }

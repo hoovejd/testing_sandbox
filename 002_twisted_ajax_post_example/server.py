@@ -2,20 +2,18 @@ from twisted.internet import reactor, endpoints
 from twisted.web.server import Site
 from twisted.web.resource import Resource
 from twisted.web.static import File
-import json
+import cgi
 
-json_data = {}
-json_data['apple'] = 'green'
-json_data['banana'] = 'yellow'
-json_data['cherry'] = 'red'
+class PostHandler(Resource):
 
-class JsonHandler(Resource):
-
-    def render_GET(self, request):
-        return json.dumps(json_data)
+    def render_POST(self, request):
+        content = request.content.read().decode("utf-8")
+        escapedContent = cgi.escape(content)
+        print(escapedContent)
+        return b"12345"
 
 root = File('www')
-root.putChild(b"get_json", JsonHandler())
+root.putChild(b"post_test", PostHandler())
 factory = Site(root)
 endpoint = endpoints.TCP4ServerEndpoint(reactor, 8888)
 endpoint.listen(factory)
